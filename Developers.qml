@@ -9,14 +9,14 @@ Rectangle {
 
     ColumnLayout {
         anchors.fill: parent
-        spacing: 20         
+        spacing: 20
         anchors.margins: 10
 
         // ===================== TOP SECTION =====================
         RowLayout {
             Layout.fillWidth: true
             Layout.fillHeight: true
-            Layout.preferredHeight: parent.height / 2   // 🔹 Top half of the window
+            Layout.preferredHeight: parent.height / 2   // Top half of the window
             spacing: 15
 
             // ---------- GOLD PANEL ----------
@@ -52,6 +52,14 @@ Rectangle {
                             anchors.margins: 10
                             fillMode: Image.PreserveAspectFit
                             source: developersBackend.goldPath
+
+                            onStatusChanged: {
+                                if (status === Image.Error) {
+                                    console.log("Gold chart not available.")
+                                    // Optional: fallback image
+                                    // source = "Developers/plotDevelopers/Medal.png"
+                                }
+                            }
                         }
 
                         Text {
@@ -100,6 +108,14 @@ Rectangle {
                             anchors.margins: 10
                             fillMode: Image.PreserveAspectFit
                             source: developersBackend.silverPath
+
+                            onStatusChanged: {
+                                if (status === Image.Error) {
+                                    console.log("Silver chart not available.")
+                                    // Optional: fallback image
+                                    // source = "Developers/plotDevelopers/Medal.png"
+                                }
+                            }
                         }
 
                         Text {
@@ -148,6 +164,14 @@ Rectangle {
                             anchors.margins: 10
                             fillMode: Image.PreserveAspectFit
                             source: developersBackend.bronzePath
+
+                            onStatusChanged: {
+                                if (status === Image.Error) {
+                                    console.log("Bronze chart not available.")
+                                    // Optional: fallback image
+                                    // source = "Developers/plotDevelopers/Medal.png"
+                                }
+                            }
                         }
 
                         Text {
@@ -239,6 +263,14 @@ Rectangle {
                         smooth: true
                         antialiasing: true
                         anchors.horizontalCenter: parent.horizontalCenter
+
+                        onStatusChanged: {
+                            if (status === Image.Error) {
+                                console.log("Medal image not available.")
+                                // Optional: fallback image
+                                // source = "Developers/plotDevelopers/Medal.png"
+                            }
+                        }
                     }
 
                     Button {
@@ -270,7 +302,6 @@ Rectangle {
                     }
                 }
             }
-
 
             // ---------- TICKET BY DEVELOPER LOG ----------
             Rectangle {
