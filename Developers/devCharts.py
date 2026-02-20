@@ -8,6 +8,7 @@ import csv
 import argparse
 import re
 import json
+import time
 import urllib.request
 from typing import Dict, List
 from collections import defaultdict
@@ -22,10 +23,17 @@ except ImportError:
 # Read contributors from GitHub stats API
 # ----------------------------
 
-def fetch_contributors_from_github(owner: str = "3C-SCSU", repo: str = "Avatar") -> list[tuple[str, int]]:
+def fetch_contributors_from_github(
+    owner: str = "3C-SCSU",
+    repo: str = "Avatar",
+    retries: int = 5,
+    delay: float = 2.0,
+) -> list[tuple[str, int]]:
     """
     Fetch contributors from GitHub /stats/contributors API for the given repo.
     Returns a list of (author, commits) tuples, sorted descending by commits.
+    Retries a few times because the stats endpoint can return an empty list
+    until GitHub finishes computing statistics.
     """
     url = f"https://api.github.com/repos/{owner}/{repo}/stats/contributors"
     req = urllib.request.Request(
@@ -36,21 +44,34 @@ def fetch_contributors_from_github(owner: str = "3C-SCSU", repo: str = "Avatar")
         },
     )
 
-    with urllib.request.urlopen(req) as resp:
-        data = json.loads(resp.read().decode("utf-8"))
+    last_data = []
+    for attempt in range(retries):
+        try:
+            with urllib.request.urlopen(req) as resp:
+                data = json.loads(resp.read().decode("utf-8"))
+        except urllib.error.URLError as e:
+            print(f"GitHub API error: {e}")
+            data = []
+
+        if data:
+            last_data = data
+            break
+
+        if attempt < retries - 1:
+            time.sleep(delay)
+
+    if not last_data:
+        return []
 
     rows: list[tuple[str, int]] = []
-    for item in data:
-        # Each item has: "total": <int>, "author": { "login": "...", ... }
+    for item in last_data:
         author_info = item.get("author") or {}
         login = author_info.get("login", "anonymous")
         total_commits = item.get("total", 0)
         rows.append((login, int(total_commits)))
 
-    # Sort descending by commit count
     rows.sort(key=lambda x: x[1], reverse=True)
     return rows
-
 
 # ----------------------------
 # Legacy: Read git commit data from local repo
@@ -253,7 +274,8 @@ def main():
     # Use GitHub stats API instead of local git shortlog, with NO adjustments
     data = fetch_contributors_from_github(owner=args.owner, repo=args.repo)
     if not data:
-        raise SystemExit("No contributors found from GitHub stats API.")
+        print("Warning: No contributors found from GitHub stats API; skipping chart generation.")
+        return
 
     tiered = assign_fixed_tiers(data)
     os.makedirs(args.out_dir, exist_ok=True)
