@@ -1,6 +1,11 @@
 #!/usr/bin/env python3
 # Author: Jason D, 10/06/2025
 
+# This is the comment by Ken, looking for bugs.
+# All the problems look like they have the issue with files path. I came here,
+# tracked file path displaeyed by terminal. It says there should be "lotDevelopers/each.png"
+# so, maybe just retreiving them from somewhere?
+
 import subprocess
 import os
 import csv

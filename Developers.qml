@@ -47,7 +47,7 @@ Rectangle {
                         Layout.fillWidth: true
                         Layout.fillHeight: true
 
-                        Image {
+                        Image { // image object again... Ken
                             anchors.fill: parent
                             anchors.margins: 10
                             fillMode: Image.PreserveAspectFit
@@ -95,7 +95,7 @@ Rectangle {
                         Layout.fillWidth: true
                         Layout.fillHeight: true
 
-                        Image {
+                        Image { // this one as well, everything is about image?? Ken
                             anchors.fill: parent
                             anchors.margins: 10
                             fillMode: Image.PreserveAspectFit
@@ -144,7 +144,7 @@ Rectangle {
                         Layout.fillHeight: true
 
                         Image {
-                            anchors.fill: parent
+                            anchors.fill: parent // this one as well?? Ken
                             anchors.margins: 10
                             fillMode: Image.PreserveAspectFit
                             source: developersBackend.bronzePath
@@ -231,7 +231,7 @@ Rectangle {
                     spacing: 1   // minimal space between image and button
 
                     // Medal Image
-                    Image {
+                    Image { // This one as well?? Ken
                         source: developersBackend.medalPath
                         width: 225
                         height: 325

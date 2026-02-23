@@ -1029,7 +1029,7 @@ Rectangle {
             Layout.fillHeight: true
             // width: parent.width * 0.3
             // height: parent.height
-            cameraController: cameraController
+            cameraController: cameraController // This one is the problem?? Ken
         }
     }
 }
