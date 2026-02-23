@@ -940,7 +940,7 @@ if __name__ == "__main__":
     shuffler_api = ShufflerAPI()
     engine.rootContext().setContextProperty("tabController", tab_controller)
     engine.rootContext().setContextProperty("backend", backend)
-    engine.rootContext().setContextProperty("developersBackend", developers)
+    engine.rootContext().setContextProperty("developersBackend", developers) # this "developers" has the wrong path? Ken Tabata
     engine.rootContext().setContextProperty("cloudAPI", cloud_api)
     engine.rootContext().setContextProperty("imageModel", [])  # Initialize empty model
     engine.rootContext().setContextProperty("cameraController", backend.camera_controller)

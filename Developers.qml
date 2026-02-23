@@ -232,7 +232,7 @@ Rectangle {
 
                     // Medal Image
                     Image { // This one as well?? Ken
-                        source: developersBackend.medalPath
+                        source: developersBackend.medalPath // I guess this one has the problm with file path.
                         width: 225
                         height: 325
                         fillMode: Image.PreserveAspectFit

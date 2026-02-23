@@ -2,6 +2,8 @@ import os
 from PySide6.QtCore import QObject, Slot, Property
 import pandas as pd
 
+# this guy has file ath problem I guess?
+
 from Developers import devCharts
 
 class DevelopersAPI(QObject):
@@ -58,6 +60,7 @@ class DevelopersAPI(QObject):
 
 
     def devImagePath(self):
+        # it should be around here since they generate the file path.
         base_dir = os.path.dirname(os.path.abspath(__file__))
         print(f"The base directory path is {base_dir}")
         plots_dir = os.path.join(base_dir, "plotDevelopers")
