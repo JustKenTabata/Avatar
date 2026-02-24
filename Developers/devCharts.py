@@ -267,6 +267,7 @@ def plot_single_tier(rows: list[tuple[str, int, str]], tier: str, outpath: str):
 def main():
     parser = argparse.ArgumentParser(description="Generate Gold, Silver, and Bronze contributor charts.")
 
+    print(f'This is the beginning of the main function...........................')
     # Anchor path to the directory containing this script (Developers folder)
     script_dir = os.path.dirname(os.path.abspath(__file__))
     default_plot_path = os.path.join(script_dir, "plotDevelopers")
