@@ -287,6 +287,7 @@ def main():
 
     # Save CSV and Plots using args.out_dir
     csv_path = os.path.join(args.out_dir, "top15_contributors_tiers.csv")
+    print(f"Saving CSV to {csv_path}...") # Debug statement to confirm CSV path
     save_csv(tiered, csv_path)
 
     for tier in ["Gold", "Silver", "Bronze"]:
