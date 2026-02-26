@@ -6,6 +6,7 @@ from Developers import devCharts  # Ensure this import stays!
 class DevelopersAPI(QObject):
     # Signal to tell QML that the images have been updated
     pathsChanged = Signal()
+    devListChanged = Signal()
 
     def __init__(self):
         super().__init__()
@@ -13,12 +14,14 @@ class DevelopersAPI(QObject):
         self._silver_path = ""
         self._bronze_path = ""
         self._medal_path = ""
-        # Initialize paths on startup
+        self._dev_list = "Loading developers list..."
+        self._loaded_once = False
         self.devImagePath()
 
     @Slot(result=str)
     def getDevList(self):
-        return devCharts.devList()
+        return self._dev_list
+        # return devCharts.devList(owner="3C-SCSU", repo="Avatar")
 
     @Slot(result=str)
     def getTicketsByDev(self) -> str:
@@ -26,17 +29,33 @@ class DevelopersAPI(QObject):
 
     @Slot()
     def devChart(self):
-        print("Generating charts...")
+        if self._loaded_once:
+            return
+        self._loaded_once = True
+        self._runChartsAndList()
+    
+    @Slot()
+    def devChartForce(self):
+        self._runChartsAndList()
+
+    def _runChartsAndList(self):
+        print("Generating charts and developers list...")
+        self._dev_list = "Loading developers list..."
+        self.devListChanged.emit()
         try:
-            # 1. Run the generation logic from devCharts.py
-            devCharts.main() 
-            
-            # 2. Update paths with new timestamps and notify QML
+            devCharts.main()
+
             self.devImagePath()
-            self.pathsChanged.emit() 
-            print("Charts generated and QML notified.")
+            self.pathsChanged.emit()
+
+            self._dev_list = devCharts.devList(owner="3C-SCSU", repo="Avatar")
+            self.devListChanged.emit()
+
+            print("Charts and developers list updated.")
         except Exception as e:
-            print(f"Error generating charts: {e}")
+            print(f"Error generating charts/dev list: {e}")
+            self._dev_list = "Error loading developers."
+            self.devListChanged.emit()
 
     def devImagePath(self):
         # Anchor to the directory where this API file sits
@@ -73,3 +92,7 @@ class DevelopersAPI(QObject):
     @Property(str, notify=pathsChanged)
     def medalPath(self):
         return self._medal_path
+
+    @Property(str, notify=devListChanged)
+    def devListText(self):
+        return self._dev_list
