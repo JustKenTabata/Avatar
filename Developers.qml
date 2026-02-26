@@ -3,9 +3,16 @@ import QtQuick.Controls 6.4
 import QtQuick.Layouts 1.15
 
 Rectangle {
+    id: root
     color: "#718399"
     width: 1100
     height: 700
+
+    onVisibleChanged: {
+        if (visible) {
+            developersBackend.devChart()
+        }
+    }
 
     ColumnLayout {
         anchors.fill: parent
@@ -56,8 +63,6 @@ Rectangle {
                             onStatusChanged: {
                                 if (status === Image.Error) {
                                     console.log("Gold chart not available.")
-                                    // Optional: fallback image
-                                    // source = "Developers/plotDevelopers/Medal.png"
                                 }
                             }
                         }
@@ -112,8 +117,6 @@ Rectangle {
                             onStatusChanged: {
                                 if (status === Image.Error) {
                                     console.log("Silver chart not available.")
-                                    // Optional: fallback image
-                                    // source = "Developers/plotDevelopers/Medal.png"
                                 }
                             }
                         }
@@ -168,8 +171,6 @@ Rectangle {
                             onStatusChanged: {
                                 if (status === Image.Error) {
                                     console.log("Bronze chart not available.")
-                                    // Optional: fallback image
-                                    // source = "Developers/plotDevelopers/Medal.png"
                                 }
                             }
                         }
@@ -225,7 +226,7 @@ Rectangle {
 
                         TextArea {
                             id: devText
-                            text: "Console output here..."
+                            text: developersBackend.devListText
                             readOnly: true
                             wrapMode: TextArea.Wrap
                             font.pixelSize: 12
@@ -236,9 +237,7 @@ Rectangle {
                 }
 
                 Component.onCompleted: {
-                    devText.text = developersBackend.getDevList()
                     ticketText.text = developersBackend.getTicketsByDev()
-                    developersBackend.devChart()
                 }
             }
 
@@ -267,8 +266,6 @@ Rectangle {
                         onStatusChanged: {
                             if (status === Image.Error) {
                                 console.log("Medal image not available.")
-                                // Optional: fallback image
-                                // source = "Developers/plotDevelopers/Medal.png"
                             }
                         }
                     }
@@ -295,9 +292,8 @@ Rectangle {
                         }
 
                         onClicked: {
-                            devText.text = developersBackend.getDevList()
+                            developersBackend.devChartForce()
                             ticketText.text = developersBackend.getTicketsByDev()
-                            developersBackend.devChart()
                         }
                     }
                 }
