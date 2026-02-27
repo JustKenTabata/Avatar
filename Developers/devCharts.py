@@ -143,13 +143,13 @@ def save_csv(rows: list[tuple[str, int, str]], outpath: str):
             w.writerow(row)
 
 
-def devList() -> str:
+def devList(owner: str = "3C-SCSU", repo: str = "Avatar") -> str:
     """
     For showing the list of developers in the GUI.
     Now uses the GitHub /stats/contributors API via fetch_contributors_from_github(),
     with no adjustments.
     """
-    data = fetch_contributors_from_github()
+    data = fetch_contributors_from_github(owner=owner, repo=repo)
     if not data:
         return "No developers found."
 
