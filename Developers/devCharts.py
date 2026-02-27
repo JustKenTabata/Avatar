@@ -79,15 +79,13 @@ def fetch_contributors_from_github(
 # ----------------------------
 
 def run_shortlog_all() -> list[tuple[str, int]]:
-    repo_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     proc = subprocess.run(
         ["git", "shortlog", "-sne", "main"],
         capture_output=True,
         text=True,
         encoding="utf-8",
         errors="ignore",
-        check=True,
-        cwd=repo_dir
+        check=True
     )
     lines = [l.strip() for l in proc.stdout.splitlines() if l.strip()]
     out: list[tuple[str, int]] = []
@@ -140,23 +138,18 @@ def save_csv(rows: list[tuple[str, int, str]], outpath: str):
             w.writerow(row)
 
 
-def devList() -> str:
+def devList(owner: str = "3C-SCSU", repo: str = "Avatar") -> str:
     """
     For showing the list of developers in the GUI.
-    Uses the GitHub /stats/contributors API, falling back to local git
-    shortlog if the API is unavailable or returns no data.
+    Now uses the GitHub /stats/contributors API via fetch_contributors_from_github(),
+    with no adjustments.
     """
-    data = fetch_contributors_from_github()
-
-    if not data:
-        exclude = {"3C Cloud Computing Club <114175379+3C-SCSU@users.noreply.github.com>"}
-        raw = run_shortlog_all()
-        data = [(name, commits) for name, commits in raw if name not in exclude]
-
+    data = fetch_contributors_from_github(owner=owner, repo=repo)
     if not data:
         return "No developers found."
 
-    lines = [f"{commits:>6} {name}" for name, commits in data]
+    # data is [(login, commits)] already sorted descending
+    lines = [f"{commits:>6} {login}" for login, commits in data]
     return "\n".join(lines)
 
 
