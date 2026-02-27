@@ -276,6 +276,11 @@ def main():
     parser.add_argument("--force", action="store_true", help="Force update expiry for all keys")
     args = parser.parse_args()
 
+    # Only allow modifications if running as root
+    if os.geteuid() != 0:
+        print("[ERROR] Only root/admin can modify key expiries.")
+        sys.exit(1)
+
     # Determine target user directories
     if args.user:
         user_dir = os.path.join(home_root, args.user) if args.user != "root" else "/root"
