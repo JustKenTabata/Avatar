@@ -278,6 +278,7 @@ def main():
 
     # Only allow modifications if running as root
     if os.geteuid() != 0:
+        print(f"os.geteuid() = {os.geteuid()}")
         print("[ERROR] Only root/admin can modify key expiries.")
         sys.exit(1)
 
